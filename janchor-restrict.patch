@@ -1,0 +1,100 @@
+diff -durN janchor-0.3.9.orig/janchor.pl janchor-0.3.9/janchor.pl
+--- janchor-0.3.9.orig/janchor.pl	Mon Sep 15 15:02:32 2003
++++ janchor-0.3.9/janchor.pl	Mon Sep 15 15:16:22 2003
+@@ -17,6 +17,7 @@
+ use constant SOURCE_FILE  => 'sources';       # Source DB
+ use constant STATUS_FILE  => 'status';        # Source Status DB
+ use constant VERBOSE	  => 2;                   # Verbosity level for logging output
++use constant ALLOW        => 'all'; # JID of the user allowed to register new sources or 'all'
+ # END EXTRA CONFIGURATION
+ 
+ BEGIN {
+@@ -127,38 +128,57 @@
+   my $xmlns = $query->GetXMLNS();
+   if ($xmlns eq 'jabber:iq:register') {
+     if ($type eq 'get') {
+-      $iq->SetType('result');
+-      $iq->SetFrom($iq->GetTo());
+-      $iq->SetTo($from);
+-      $query->SetInstructions('Please supply the name of the source, and optionally a URL to reach that source.
++        if ((ALLOW ne 'all') and ($from->GetJID("base") ne ALLOW)){
++	  $iq->SetType('result');
++	  $iq->SetFrom($iq->GetTo());
++	  $iq->SetTo($from);
++	  $query->SetInstructions('Only the administrator may register sources.');
++	  $Connection->Send($iq);
++	}
++        else{
++          $iq->SetType('result');
++          $iq->SetFrom($iq->GetTo());
++          $iq->SetTo($from);
++          $query->SetInstructions('Please supply the name of the source, and optionally a URL to reach that source.
+ If you supply a URL, it will be assumed that you are adding or updating  a headline source. Otherwise, it will be assumed that you are deleting that source.');
+-      $query->SetName("");
+-      $query->SetURL("");
+-      $Connection->Send($iq);
++          $query->SetName("");
++          $query->SetURL("");
++          $Connection->Send($iq);
++	}
+     } elsif ($type eq 'set') {
+-      my $url = $query->GetURL();
+-      my $name = $query->GetName();
+-      if ($url && $name) {
+-	log2 ("Subscribing to $name at $url");
+-	$sources{lc($name)} = $url;
++      if ((ALLOW ne 'all') and ($from->GetJID("base") ne ALLOW)){
++	$iq->SetType('error');
++	$iq->SetFrom($to);
++	$iq->SetTo($from);
++	$iq->SetErrorCode(403);
++	$iq->SetError("Forbidden");
++	$Connection->Send($iq);
++      }
++      else{
++        my $url = $query->GetURL();
++        my $name = $query->GetName();
++        if ($url && $name) {
++ 	  log2 ("Subscribing to $name at $url");
++	  $sources{lc($name)} = $url;
+ 
+-        do_rss_source($name);
+-      } elsif ($name) {
+-	log2 ("Unsubscribing from $name");
++          do_rss_source($name);
++        } elsif ($name) {
++	  log2 ("Unsubscribing from $name");
+ 
+-	# Send presence to people are still subscribed to this source.
+-	my $presence = new Net::Jabber::Presence();
+-	$presence->SetType("unsubscribed");
+-	$presence->SetStatus("Source does not exist");
+-	$presence->SetFrom($name . '@' . SERVICE_NAME);
+-	deliver_sub($presence, $name);
+-	delete $status{lc($name)};
+-	delete $sources{lc($name)};
++	  # Send presence to people are still subscribed to this source.
++	  my $presence = new Net::Jabber::Presence();
++	  $presence->SetType("unsubscribed");
++	  $presence->SetStatus("Source does not exist");
++	  $presence->SetFrom($name . '@' . SERVICE_NAME);
++	  deliver_sub($presence, $name);
++	  delete $status{lc($name)};
++	  delete $sources{lc($name)};
++        }
++        $iq->SetType('result');
++        $iq->SetFrom($to);
++        $iq->SetTo($from);
++        $Connection->Send($iq);
+       }
+-      $iq->SetType('result');
+-      $iq->SetFrom($to);
+-      $iq->SetTo($from);
+-      $Connection->Send($iq);
+     } else {
+       $iq->SetType('error');
+       $iq->SetFrom($to);
+Binary files janchor-0.3.9.orig/registrations and janchor-0.3.9/registrations differ
+Binary files janchor-0.3.9.orig/rss_cache and janchor-0.3.9/rss_cache differ
+Binary files janchor-0.3.9.orig/sources and janchor-0.3.9/sources differ
+Binary files janchor-0.3.9.orig/status and janchor-0.3.9/status differ
