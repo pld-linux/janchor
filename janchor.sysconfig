@@ -1,0 +1,5 @@
+# Customized setings for janchor
+
+# Define nice level for janchor 
+SERVICE_RUN_NICE_LEVEL="+5"
+

@@ -1,0 +1,56 @@
+#!/bin/sh
+# Janchor - Jabber headlines service
+# 
+# chkconfig:	345 85 05
+# description:	Janchor - Jabber headlines service
+
+# Source function library
+. /etc/rc.d/init.d/functions
+
+# Get network config
+. /etc/sysconfig/network
+
+# Get service config
+[ -f /etc/sysconfig/janchor ] && . /etc/sysconfig/janchor
+
+# Check that networking is up.
+if is_no "${NETWORKING}"; then
+	msg_Network_Down janchor
+	exit 1
+fi
+
+# See how we were called.
+case "$1" in
+  start)
+	# Check if the service is already running?
+	if [ ! -f /var/lock/subsys/janchor ]; then
+		msg_starting "JAnchor"
+		cd /var/lib/janchor
+		daemon su -s /bin/sh jabber -c "setsid /usr/sbin/janchor </dev/null >/var/log/janchor.log 2>&1 &"
+		RETVAL=$?
+		if [ $RETVAL -eq 0 ] ; then
+			touch /var/lock/subsys/janchor
+		fi
+	else
+		msg_Already_Running janchor
+		exit 1
+	fi
+	;;
+  stop)
+	msg_stopping  "JAnchor"
+	killproc janchor
+	rm -f /var/lock/subsys/janchor
+	;;
+  restart|reload)
+	$0 stop
+	$0 start
+	;;
+  status)
+	status janchor
+	;;
+  *)
+	msg_Usage "$0 {start|stop|restart|reload|status}"
+	exit 1
+esac
+
+exit $RETVAL
