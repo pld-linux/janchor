@@ -31,7 +31,7 @@ case "$1" in
 	if [ ! -f /var/lock/subsys/janchor ]; then
 		msg_starting "JAnchor"
 		daemon /usr/sbin/daemon -D /var/lib/janchor -u jabber -P /var/run/jabber \
-			-o daemon.info -r -n janchor /usr/sbin/janchor
+			-o /var/log/janchor.log -r -n janchor /usr/sbin/janchor
 		RETVAL=$?
 		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/janchor
 	else
