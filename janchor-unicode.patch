@@ -1,0 +1,29 @@
+diff -durN janchor-0.3.9.orig/janchor.pl janchor-0.3.9/janchor.pl
+--- janchor-0.3.9.orig/janchor.pl	Mon Sep 15 15:17:57 2003
++++ janchor-0.3.9/janchor.pl	Mon Sep 15 15:21:23 2003
+@@ -29,6 +29,7 @@
+ use Text::Iconv;
+ use LWP::UserAgent;
+ use XML::RSS;
++use Unicode::String qw(utf8);
+ use strict;
+ 
+ # Source status enumerations
+@@ -323,10 +324,16 @@
+ 	$content =~ s/^\s*//g;
+ 	if (($content =~ /.*<\?xml[^>]*encoding[\s]*=[\s]*['"](.*?)["']/) and (uc($1) ne "UTF-8")) {
+ 	  my $enc = uc($1);
++	  my $orig_content=$content;
+ 	  my $converter = Text::Iconv->new("$enc", "UTF-8");
+-	  $content = $converter->convert($content);
++	  $content = $converter->convert($orig_content);
++          if ($content eq undef) {
++                $content=$orig_content;
++                $content =~ s/[\x00-\x08\x0b-\x0c\x0e-\x1f\x7f-\xff]/?/g;
++          }
+ 	  $content =~ s/(.*<\?xml[^>]*)encoding[\s]*=[\s]*['"].*?["']/$1/;
+ 	}
++	$content=utf8($content)->utf8; # to make sure it is UTF-8
+ 	print $content;
+       }
+       exit;
