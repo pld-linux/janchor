@@ -14,6 +14,7 @@ Patch0:		%{name}-external_config.patch
 Patch1:		%{name}-restrict.patch
 Patch2:		%{name}-unicode.patch
 Patch3:		%{name}-default_config.patch
+Patch4:		%{name}-presence_type_available.patch
 URL:		http://janchor.jabberstudio.org/
 PreReq:		rc-scripts
 Requires(post,preun):	/sbin/chkconfig
@@ -38,6 +39,7 @@ przekierowuje te nowe wiadomo¶ci jako wiadomo¶ci Jabbera.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 %build
 awk '
