@@ -6,7 +6,7 @@ diff -durN janchor-0.3.9.orig/janchor.pl janchor-0.3.9/janchor.pl
  # END EXTRA CONFIGURATION
  
 +BEGIN {
-+	do '/etc/janchor.rc';
++	do '/etc/jabber/janchor.rc';
 +}
 +
  use Net::Jabber qw(Component);

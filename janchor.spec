@@ -49,11 +49,11 @@ BEGIN { config=0; }
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_sbindir}} \
+install -d $RPM_BUILD_ROOT{%{_sysconfdir}/jabber,%{_sbindir}} \
 	$RPM_BUILD_ROOT{/etc/rc.d/init.d,/etc/sysconfig,/var/log,/var/lib/janchor}
 
 install janchor.pl $RPM_BUILD_ROOT%{_sbindir}/janchor
-install janchor.rc $RPM_BUILD_ROOT%{_sysconfdir}/janchor.rc
+install janchor.rc $RPM_BUILD_ROOT%{_sysconfdir}/jabber/janchor.rc
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/janchor
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/janchor
 touch $RPM_BUILD_ROOT/var/log/janchor.log
@@ -62,6 +62,14 @@ touch $RPM_BUILD_ROOT/var/log/janchor.log
 rm -rf $RPM_BUILD_ROOT
 
 %post
+if [ -f /etc/jabber/secret ] ; then
+	SECRET=`cat /etc/jabber/secret`
+	if [ -n "$SECRET" ] ; then
+        	echo "Updating component authentication secret in janchor.rc..."
+		perl -pi -e "s/'secret'/'$SECRET'/" /etc/jabber/janchor.rc
+	fi
+fi
+
 /sbin/chkconfig --add janchor
 if [ -r /var/lock/subsys/janchor ]; then
 	/etc/rc.d/init.d/janchor restart >&2
@@ -81,7 +89,7 @@ fi
 %defattr(644,root,root,755)
 %doc README.html VISION.html
 %attr(755,root,root) %{_sbindir}/*
-%attr(640,root,jabber) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/janchor.rc
+%attr(640,root,jabber) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/jabber/janchor.rc
 %attr(754,root,root) /etc/rc.d/init.d/janchor
 %config(noreplace) %verify(not size mtime md5) /etc/sysconfig/janchor
 %attr(664,root,jabber) /var/log/janchor.log
