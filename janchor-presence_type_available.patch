@@ -1,0 +1,48 @@
+diff -durN janchor-0.3.9.orig/janchor.pl janchor-0.3.9/janchor.pl
+--- janchor-0.3.9.orig/janchor.pl	Mon Sep 22 11:50:35 2003
++++ janchor-0.3.9/janchor.pl	Mon Sep 22 11:51:48 2003
+@@ -214,20 +214,17 @@
+     $reg{$from} = $element;
+     $Connection->Send($presence);
+     if (defined($sources{$topic})) {
+-      $presence->SetType("available");
+       $presence->SetShow($status_show{$status{$topic}});
+       $presence->SetStatus($status_messages{$status{$topic}});
+     } else {
+-      $presence->SetType("available");
+       $presence->SetShow("dnd");
+       $presence->SetStatus("Source does not exist");
+     }
+ 
+     $Connection->Send($presence);
+-  } elsif (($type eq 'available') or ($type eq 'probe')) {
++  } elsif (($type eq 'available') or ($type eq 'probe') or (not $type)) {
+     if (($reg{$from})->{$topic}) {
+       if (defined($sources{$topic})) {
+-	$presence->SetType("available");
+ 	$presence->SetShow($status_show{$status{$topic}});
+ 	$presence->SetStatus($status_messages{$status{$topic}});
+       } else {
+@@ -240,11 +237,9 @@
+       $Connection->Send($presence);
+     } else {
+       if (defined($sources{$topic})) {
+-	$presence->SetType("available");
+ 	$presence->SetShow("dnd");
+ 	$presence->SetStatus("You are not subscribed.");
+       } else {
+-	$presence->SetType("available");
+ 	$presence->SetShow("dnd");
+ 	$presence->SetStatus("Source does not exist");
+       }
+@@ -475,9 +470,7 @@
+   my $presence = new Net::Jabber::Presence();
+   if ($status == $SOURCE_OFFLINE) {
+     $presence->SetType("unavailable");
+-  } else {
+-    $presence->SetType("available");
+-  }
++  } 
+   if ($status{$topic} != $SOURCE_OK) {
+     $presence->SetShow($status_show{$status});
+     $presence->SetStatus($message);
