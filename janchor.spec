@@ -11,10 +11,13 @@ Source0:	http://janchor.jabberstudio.org/all_versions/janchor-%{version}.tar.gz
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Patch0:		%{name}-external_config.patch
+Patch1:		%{name}-restrict.patch
+Patch2:		%{name}-unicode.patch
+Patch3:		%{name}-default_config.patch
 URL:		http://janchor.jabberstudio.org/
 PreReq:		rc-scripts
 Requires(post,preun):	/sbin/chkconfig
-Requires:	jabber
+Requires:	daemon
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -31,6 +34,9 @@ przekierowuje te nowe wiadomo¶ci jako wiadomo¶ci Jabbera.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
 
 %build
 awk '
@@ -43,7 +49,8 @@ BEGIN { config=0; }
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_sbindir},/etc/rc.d/init.d,/etc/sysconfig,/var/log,/var/lib/janchor}
+install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_sbindir}} \
+	$RPM_BUILD_ROOT{/etc/rc.d/init.d,/etc/sysconfig,/var/log,/var/lib/janchor}
 
 install janchor.pl $RPM_BUILD_ROOT%{_sbindir}/janchor
 install janchor.rc $RPM_BUILD_ROOT%{_sysconfdir}/janchor.rc
@@ -59,7 +66,7 @@ rm -rf $RPM_BUILD_ROOT
 if [ -r /var/lock/subsys/janchor ]; then
 	/etc/rc.d/init.d/janchor restart >&2
 else
-	echo "Run \"/etc/rc.d/init.d/janchor start\" to start Jabber GaduGadu transport."
+	echo "Run \"/etc/rc.d/init.d/janchor start\" to start Janchor."
 fi
 
 %preun
