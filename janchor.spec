@@ -7,6 +7,7 @@ Release:	1
 License:	GPL
 Group:		Applications/Communications
 Source0:	http://janchor.jabberstudio.org/all_versions/janchor-%{version}.tar.gz
+# Source0-md5:	3facec92cb34c0e4609c345990a411bd
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Patch0:		%{name}-external_config.patch
