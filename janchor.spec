@@ -18,6 +18,7 @@ URL:		http://janchor.jabberstudio.org/
 PreReq:		rc-scripts
 Requires(post,preun):	/sbin/chkconfig
 Requires:	daemon
+Requires:	jabber-common
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
