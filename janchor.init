@@ -30,8 +30,8 @@ case "$1" in
 	# Check if the service is already running?
 	if [ ! -f /var/lock/subsys/janchor ]; then
 		msg_starting "JAnchor"
-		cd /var/lib/janchor
-		daemon su -s /bin/sh jabber -c '"setsid /usr/sbin/janchor </dev/null >/var/log/janchor.log 2>&1 &"'
+		daemon /usr/sbin/daemon -D /var/lib/janchor -u jabber -P /var/lib/janchor \
+			-o daemon.info -r -n janchor /usr/sbin/janchor
 		RETVAL=$?
 		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/janchor
 	else
@@ -42,7 +42,8 @@ case "$1" in
 	# Check if the service is already running?
 	if [ -f /var/lock/subsys/janchor ]; then
 		msg_stopping "JAnchor"
-		killproc janchor
+		busy
+		/usr/sbin/daemon -P /var/lib/janchor --stop -n janchor && ok || fail
 		rm -f /var/lock/subsys/janchor
 	else
 		msg_not_running janchor
@@ -55,6 +56,7 @@ case "$1" in
 	;;
   status)
 	status janchor
+	/usr/sbin/daemon -P /var/lib/janchor --verbose --running -n janchor
 	exit $?
 	;;
   *)
