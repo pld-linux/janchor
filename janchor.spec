@@ -12,6 +12,8 @@ Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Patch0:		%{name}-external_config.patch
 URL:		http://janchor.jabberstudio.org/
+PreReq:		rc-scripts
+Requires(post,preun):	/sbin/chkconfig
 Requires:	jabber
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
