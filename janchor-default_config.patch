@@ -1,0 +1,17 @@
+diff -durN janchor-0.3.9.orig/janchor.pl janchor-0.3.9/janchor.pl
+--- janchor-0.3.9.orig/janchor.pl	Mon Sep 15 15:25:20 2003
++++ janchor-0.3.9/janchor.pl	Mon Sep 15 15:26:16 2003
+@@ -3,10 +3,10 @@
+ # janchor.pl: By Jeremy Nickurak, 2002
+ 
+ # BEGIN CONFIGURATION
+-use constant SERVICE_NAME => 'headlines.myhost.com'; # full name of the headline component.
++use constant SERVICE_NAME => 'headlines.localhost'; # full name of the headline component.
+ use constant SERVER       => '127.0.0.1'; # ip/hostname of the jabber server to connect to/
+-use constant PORT         => 31515; # port on the jabber server to connect to
+-use constant SECRET       => 'hallo'; # SECRET phrase for jabber component connection.
++use constant PORT         => 5347; # port on the jabber server to connect to
++use constant SECRET       => 'secret'; # SECRET phrase for jabber component connection.
+ # END BASIC CONFIGURATION
+ 
+ # BEGIN EXTRA CONFIGURATION
