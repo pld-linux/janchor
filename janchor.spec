@@ -1,5 +1,6 @@
 %include	/usr/lib/rpm/macros.perl
-Summary:	Janchor - headline delivery for jabber
+Summary:	Janchor - headline delivery for Jabber
+Summary(pl):	Janchor - dostarczanie skrótów wiadomo¶ci do Jabbera
 Name:		janchor
 Version:	0.3.9
 Release:	1
@@ -9,15 +10,20 @@ Source0:	http://janchor.jabberstudio.org/all_versions/janchor-%{version}.tar.gz
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Patch0:		%{name}-external_config.patch
-Url:		http://janchor.jabberstudio.org/
+URL:		http://janchor.jabberstudio.org/
 Requires:	jabber
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
-Janchor polls a series of sources (RSS or RDF file on the web), and, according
-to user's interests (individual source subscriptions), forwards those new items
-as Jabber messages.
+Janchor polls a series of sources (RSS or RDF file on the web), and,
+according to user's interests (individual source subscriptions),
+forwards those new items as Jabber messages.
+
+%description -l pl
+Janchor odczytuje szereg ¼róde³ (plików RSS lub RDF w sieci) i,
+zgodnie z zainteresowaniami u¿ytkownika (indywidualn± prenumerat±),
+przekierowuje te nowe wiadomo¶ci jako wiadomo¶ci Jabbera.
 
 %prep
 %setup -q
@@ -32,11 +38,10 @@ BEGIN { config=0; }
 /# BEGIN [A-Z ]*CONFIGURATION/ { print; config=1; }
 ' janchor.pl > janchor.rc
 
-
-
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sysconfdir},%{_sbindir},/etc/rc.d/init.d,/etc/sysconfig,/var/log,/var/lib/janchor}
+
 install janchor.pl $RPM_BUILD_ROOT%{_sbindir}/janchor
 install janchor.rc $RPM_BUILD_ROOT%{_sysconfdir}/janchor.rc
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/janchor
