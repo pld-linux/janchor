@@ -16,6 +16,7 @@ Patch2:		%{name}-unicode.patch
 Patch3:		%{name}-default_config.patch
 Patch4:		%{name}-presence_type_available.patch
 URL:		http://janchor.jabberstudio.org/
+BuildRequires:	rpm-perlprov
 PreReq:		rc-scripts
 Requires(post,preun):	/sbin/chkconfig
 Requires:	daemon
