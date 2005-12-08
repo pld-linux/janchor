@@ -1,6 +1,6 @@
 #!/bin/sh
 # Janchor - Jabber headlines service
-# 
+#
 # chkconfig:	345 85 05
 # description:	Janchor - Jabber headlines service
 
