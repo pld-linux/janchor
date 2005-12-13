@@ -6,7 +6,7 @@ Version:	0.3.9
 Release:	1
 License:	GPL
 Group:		Applications/Communications
-Source0:	http://janchor.jabberstudio.org/all_versions/janchor-%{version}.tar.gz
+Source0:	http://janchor.jabberstudio.org/all_versions/%{name}-%{version}.tar.gz
 # Source0-md5:	3facec92cb34c0e4609c345990a411bd
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
@@ -17,10 +17,10 @@ Patch3:		%{name}-default_config.patch
 Patch4:		%{name}-presence_type_available.patch
 URL:		http://janchor.jabberstudio.org/
 BuildRequires:	rpm-perlprov
-PreReq:		rc-scripts
 Requires(post,preun):	/sbin/chkconfig
 Requires:	daemon
 Requires:	jabber-common
+Requires:	rc-scripts
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -93,8 +93,8 @@ fi
 %defattr(644,root,root,755)
 %doc README.html VISION.html
 %attr(755,root,root) %{_sbindir}/*
-%attr(640,root,jabber) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/jabber/janchor.rc
+%attr(640,root,jabber) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/jabber/janchor.rc
 %attr(754,root,root) /etc/rc.d/init.d/janchor
-%config(noreplace) %verify(not size mtime md5) /etc/sysconfig/janchor
+%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/janchor
 %attr(664,root,jabber) /var/log/janchor.log
 %dir %attr(775,root,jabber) /var/lib/janchor
