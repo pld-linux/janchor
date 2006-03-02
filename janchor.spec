@@ -17,6 +17,8 @@ Patch3:		%{name}-default_config.patch
 Patch4:		%{name}-presence_type_available.patch
 URL:		http://janchor.jabberstudio.org/
 BuildRequires:	rpm-perlprov
+BuildRequires:	rpmbuild(macros) >= 1.268
+Requires(post):	sed >= 4.0
 Requires(post,preun):	/sbin/chkconfig
 Requires:	daemon
 Requires:	jabber-common
@@ -42,7 +44,6 @@ przekierowuje te nowe wiadomo¶ci jako wiadomo¶ci Jabbera.
 %patch3 -p1
 %patch4 -p1
 
-%build
 awk '
 BEGIN { config=0; }
 
@@ -66,26 +67,20 @@ touch $RPM_BUILD_ROOT/var/log/janchor.log
 rm -rf $RPM_BUILD_ROOT
 
 %post
-if [ -f /etc/jabber/secret ] ; then
-	SECRET=`cat /etc/jabber/secret`
+if [ -f %{_sysconfdir}/jabber/secret ] ; then
+	SECRET=`cat %{_sysconfdir}/jabber/secret`
 	if [ -n "$SECRET" ] ; then
-        	echo "Updating component authentication secret in janchor.rc..."
-		perl -pi -e "s/'secret'/'$SECRET'/" /etc/jabber/janchor.rc
+		echo "Updating component authentication secret in janchor.rc..."
+		%{__sed} -i -e "s/'secret'/'$SECRET'/" /etc/jabber/janchor.rc
 	fi
 fi
 
 /sbin/chkconfig --add janchor
-if [ -r /var/lock/subsys/janchor ]; then
-	/etc/rc.d/init.d/janchor restart >&2
-else
-	echo "Run \"/etc/rc.d/init.d/janchor start\" to start Janchor."
-fi
+%service janchor restart "Janchor"
 
 %preun
 if [ "$1" = "0" ]; then
-	if [ -r /var/lock/subsys/janchor ]; then
-		/etc/rc.d/init.d/janchor stop >&2
-	fi
+	%service janchor stop
 	/sbin/chkconfig --del janchor
 fi
 
