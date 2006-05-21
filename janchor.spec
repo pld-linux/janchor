@@ -3,7 +3,7 @@ Summary:	Janchor - headline delivery for Jabber
 Summary(pl):	Janchor - dostarczanie skrótów wiadomo¶ci do Jabbera
 Name:		janchor
 Version:	0.3.9
-Release:	1
+Release:	2
 License:	GPL
 Group:		Applications/Communications
 Source0:	http://janchor.jabberstudio.org/all_versions/%{name}-%{version}.tar.gz
