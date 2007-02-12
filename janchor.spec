@@ -1,6 +1,6 @@
 %include	/usr/lib/rpm/macros.perl
 Summary:	Janchor - headline delivery for Jabber
-Summary(pl):	Janchor - dostarczanie skrÛtÛw wiadomo∂ci do Jabbera
+Summary(pl.UTF-8):   Janchor - dostarczanie skr√≥t√≥w wiadomo≈õci do Jabbera
 Name:		janchor
 Version:	0.3.9
 Release:	2
@@ -31,10 +31,10 @@ Janchor polls a series of sources (RSS or RDF file on the web), and,
 according to user's interests (individual source subscriptions),
 forwards those new items as Jabber messages.
 
-%description -l pl
-Janchor odczytuje szereg ºrÛde≥ (plikÛw RSS lub RDF w sieci) i,
-zgodnie z zainteresowaniami uøytkownika (indywidualn± prenumerat±),
-przekierowuje te nowe wiadomo∂ci jako wiadomo∂ci Jabbera.
+%description -l pl.UTF-8
+Janchor odczytuje szereg ≈∫r√≥de≈Ç (plik√≥w RSS lub RDF w sieci) i,
+zgodnie z zainteresowaniami u≈ºytkownika (indywidualnƒÖ prenumeratƒÖ),
+przekierowuje te nowe wiadomo≈õci jako wiadomo≈õci Jabbera.
 
 %prep
 %setup -q
