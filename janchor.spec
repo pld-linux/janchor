@@ -1,4 +1,3 @@
-%include	/usr/lib/rpm/macros.perl
 Summary:	Janchor - headline delivery for Jabber
 Summary(pl.UTF-8):	Janchor - dostarczanie skrótów wiadomości do Jabbera
 Name:		janchor
